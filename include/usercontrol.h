@@ -58,8 +58,6 @@ void direction_controlling()
 {
   while (true)
   {
-    Brain.Screen.newLine();
-    Brain.Screen.print(Motor_right.position(vex::rotationUnits::deg) - a);
     Motor_left.spin(forward, Controller1.Axis1.value() + Controller1.Axis2.value(), velocityUnits::pct);
     Motor_right.spin(reverse, Controller1.Axis2.value() - Controller1.Axis1.value(), velocityUnits::pct);
   }
