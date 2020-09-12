@@ -1,64 +1,59 @@
 #include "vex.h"
 using namespace vex;
-bool Motor_arm_lock = false;
 
-void Catch_hand()
-{
-  while (true)
-  {
-    if (Controller1.ButtonR1.pressing())
-    {
-      Motor_hand.spin(forward, 30, vex::velocityUnits::pct);
-      task::sleep(200);
+void direction_controlling() {
+    while (true) {
+        Motor_left_Front.spin(forward, Controller1.Axis1.value() + Controller1.Axis2.value(),velocityUnits::pct);
+        Motor_left_back.spin(forward, Controller1.Axis1.value() + Controller1.Axis2.value(),velocityUnits::pct);
+        Motor_right_Front.spin(reverse, Controller1.Axis2.value() - Controller1.Axis1.value(),velocityUnits::pct);
+        Motor_right_Back.spin(reverse, Controller1.Axis2.value() - Controller1.Axis1.value(),velocityUnits::pct);
     }
-    else if (Controller1.ButtonR2.pressing())
-    {
-      Motor_hand.spin(forward, -30, vex::velocityUnits::pct);
-      Motor_hand.setTimeout(200, timeUnits::sec);
-      task::sleep(200);
-    }
-    else
-    {
-      Motor_hand.stop(brakeType::hold);
-    }
-  }
 }
 
-void Up_arm()
-{
-  while (true)
-  {
-    if (Controller1.ButtonX.pressing())
-    {
-      Motor_arm_lock = false;
-      Motor_arm.spin(forward, 30, vex::velocityUnits::pct);
+void collect() {
+    while (true) {
+        if (Controller1.ButtonR1.pressing()) {
+            Motor_left_Arm.spin(forward, 100, velocityUnits::pct);
+            Motor_right_Arm.spin(reverse, 100, velocityUnits::pct);
+        } else if (Controller1.ButtonR2.pressing()) {
+            Motor_left_Arm.spin(forward, -100, velocityUnits::pct);
+            Motor_right_Arm.spin(reverse, -100, velocityUnits::pct);
+        } else {
+            Motor_left_Arm.stop();
+            Motor_right_Arm.stop();
+        }
     }
-    else if (Controller1.ButtonB.pressing())
-    {
-      Motor_arm_lock = false;
-      Motor_arm.spin(forward, -30, vex::velocityUnits::pct);
-    }
-    else
-    {
-      if (Motor_arm_lock)
-      {
-        Motor_arm.stop(brakeType::hold);
-      }
-      else
-      {
-        Motor_arm.stop(brakeType::coast);
-        task::sleep(50);
-        Motor_arm_lock = true;
-      }
-    }
-  }
 }
 
-void direction_controlling()
-{
-  while (true)
-  {
-    Motor_left.spin(forward, Controller1.Axis1.value() + Controller1.Axis2.value(), velocityUnits::pct);
-    Motor_right.spin(reverse, Controller1.Axis2.value() - Controller1.Axis1.value(), velocityUnits::pct);
-  }
+int Stop_Collect_Bottom = 100;
+int Stop_Collect_Top = 100;
+
+void Up_down() {
+    while (true) {
+        if (Controller1.ButtonL1.pressing()) {
+            Collect_Bottom.spin(reverse, Stop_Collect_Bottom,velocityUnits::pct);
+            Collect_Top.spin(forward, Stop_Collect_Top, velocityUnits::pct);
+        } else if (Controller1.ButtonL2.pressing()) {
+            Collect_Bottom.spin(reverse, -1 * Stop_Collect_Bottom,velocityUnits::pct);
+            Collect_Top.spin(forward, -1 * Stop_Collect_Top,velocityUnits::pct);
+        } else {
+            Collect_Bottom.stop();
+            Collect_Top.stop();
+        }
+    }
+}
+
+void Stop_Up_down() {
+    while (true) {
+        if (Controller1.ButtonUp.pressing()) {
+            Stop_Collect_Top = 0;
+        } else{
+            Stop_Collect_Top = 100;
+        }
+        if (Controller1.ButtonDown.pressing()) {
+            Stop_Collect_Bottom = 0;
+        } else{
+            Stop_Collect_Bottom = 100;
+        }
+    }
 }

@@ -11,10 +11,15 @@
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
 // Controller1          controller                    
-// Motor_left           motor         1               
-// Motor_right          motor         10              
-// Motor_arm            motor         8               
-// Motor_hand           motor         3               
+// Motor_left_Front     motor         1               
+// Motor_right_Front    motor         2               
+// Motor_left_Arm       motor         5               
+// Motor_right_Arm      motor         6               
+// Motor_left_back      motor         3               
+// Motor_right_Back     motor         4               
+// Collect_Bottom       motor         7               
+// Collect_Top          motor         8               
+// Vision               vision        9               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -26,6 +31,7 @@ competition Competition;
 int main() {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
-  Competition.autonomous(autonomous);
-  Competition.drivercontrol(usercontrol);
+  // Competition.autonomous(autonomous);
+  // Competition.drivercontrol(usercontrol);
+  usercontrol();
 }
