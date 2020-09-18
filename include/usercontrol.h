@@ -3,22 +3,10 @@ using namespace vex;
 
 void direction_controlling() {
   while(true){
-    if(Controller1.Axis1.value() + Controller1.Axis2.value() != 0){
-        Motor_left_Front.spin(forward, Controller1.Axis1.value() + Controller1.Axis2.value(),velocityUnits::pct);
-        Motor_left_back.spin(forward, Controller1.Axis1.value() + Controller1.Axis2.value(),velocityUnits::pct);
-        Motor_right_Front.spin(reverse, Controller1.Axis2.value() - Controller1.Axis1.value(),velocityUnits::pct);
-        Motor_right_Back.spin(reverse, Controller1.Axis2.value() - Controller1.Axis1.value(),velocityUnits::pct);
-    }else if(Controller1.Axis3.value() + Controller1.Axis4.value() != 0){
-        Motor_left_Front.spin(forward, Controller1.Axis4.value() + Controller1.Axis3.value() * 0.3,velocityUnits::pct);
-        Motor_left_back.spin(forward, Controller1.Axis4.value() + Controller1.Axis3.value() * 0.3,velocityUnits::pct);
-        Motor_right_Front.spin(reverse, Controller1.Axis3.value() - Controller1.Axis4.value() * 0.3,velocityUnits::pct);
-        Motor_right_Back.spin(reverse, Controller1.Axis3.value() - Controller1.Axis4.value() * 0.3,velocityUnits::pct);
-    }else{
-        Motor_left_Front.spin(forward, 0 ,velocityUnits::pct);
-        Motor_left_back.spin(forward, 0 ,velocityUnits::pct);
-        Motor_right_Front.spin(reverse, 0 ,velocityUnits::pct);
-        Motor_right_Back.spin(reverse, 0 ,velocityUnits::pct);
-    }
+    Motor_left_Front.spin(forward, Controller1.Axis1.value() * 0.3 + Controller1.Axis2.value(),velocityUnits::pct);
+    Motor_left_back.spin(forward, Controller1.Axis1.value() * 0.3 + Controller1.Axis2.value(),velocityUnits::pct);
+    Motor_right_Front.spin(reverse, Controller1.Axis2.value() - Controller1.Axis1.value() * 0.3,velocityUnits::pct);
+    Motor_right_Back.spin(reverse, Controller1.Axis2.value() - Controller1.Axis1.value() * 0.3,velocityUnits::pct);
   }
   
 }
