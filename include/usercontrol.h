@@ -3,10 +3,10 @@ using namespace vex;
 
 void direction_controlling() {
   while(true){
-    Motor_left_Front.spin(forward, Controller1.Axis1.value() * 0.3 + Controller1.Axis2.value(),velocityUnits::pct);
-    Motor_left_back.spin(forward, Controller1.Axis1.value() * 0.3 + Controller1.Axis2.value(),velocityUnits::pct);
-    Motor_right_Front.spin(reverse, Controller1.Axis2.value() - Controller1.Axis1.value() * 0.3,velocityUnits::pct);
-    Motor_right_Back.spin(reverse, Controller1.Axis2.value() - Controller1.Axis1.value() * 0.3,velocityUnits::pct);
+    Motor_left_Front.spin(forward, Controller1.Axis1.value() * 0.5 + Controller1.Axis2.value(),velocityUnits::pct);
+    Motor_left_back.spin(forward, Controller1.Axis1.value() * 0.5 + Controller1.Axis2.value(),velocityUnits::pct);
+    Motor_right_Front.spin(reverse, Controller1.Axis2.value() - Controller1.Axis1.value() * 0.5,velocityUnits::pct);
+    Motor_right_Back.spin(reverse, Controller1.Axis2.value() - Controller1.Axis1.value() * 0.5,velocityUnits::pct);
   }
   
 }
@@ -30,7 +30,14 @@ void collect() {
 int Stop_Collect_Bottom = 100;
 int Stop_Collect_Top = 100;
 
+void init(){
+  Collect_Top.spin(forward, -100,velocityUnits::pct);
+  wait(1000,vex::timeUnits::msec);
+  Collect_Top.stop();
+}
+
 void Up_down() {
+  init();
     while (true) {
         if (Controller1.ButtonL1.pressing()) {
             Collect_Bottom.spin(reverse, Stop_Collect_Bottom,velocityUnits::pct);
