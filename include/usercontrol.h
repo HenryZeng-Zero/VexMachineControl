@@ -1,6 +1,8 @@
 #include "vex.h"
 using namespace vex;
 
+
+
 void direction_controlling() {
   while(true){
     Motor_left_Front.spin(forward, Controller1.Axis1.value() * 0.5 + Controller1.Axis2.value(),velocityUnits::pct);
