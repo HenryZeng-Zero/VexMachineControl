@@ -14,7 +14,7 @@ void direction_controlling() {
 
 void collect() {
     while (true) {
-        if (Controller1.ButtonL2.pressing()) {
+        if (Controller1.ButtonL1.pressing()) {
             Motor_left_Arm.spin(forward, 100, velocityUnits::pct);
             Motor_right_Arm.spin(reverse, 100, velocityUnits::pct);
         } else if (Controller1.ButtonR2.pressing()) {
@@ -39,7 +39,7 @@ void init(){
 void Up_down() {
   init();
     while (true) {
-        if (Controller1.ButtonL1.pressing()) {
+        if (Controller1.ButtonL2.pressing()) {
             Collect_Bottom.spin(reverse, Stop_Collect_Bottom,velocityUnits::pct);
             Collect_Top.spin(forward, Stop_Collect_Top, velocityUnits::pct);
         } else if (Controller1.ButtonR1.pressing()) {
