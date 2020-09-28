@@ -22,6 +22,7 @@ signature Vision__BLUEBALL = signature (1, -3163, -2101, -2632, 9067, 12437, 107
 signature Vision__REDBALL = signature (2, 5923, 8993, 7458, -1, 1225, 612, 3.1, 0);
 vision Vision = vision (PORT9, 50, Vision__BLUEBALL, Vision__REDBALL);
 /*vex-vision-config:end*/
+inertial Inertial = inertial(PORT10);
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable

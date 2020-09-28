@@ -1,7 +1,16 @@
 #include "vex.h"
 using namespace vex;
 
-
+void check(){
+    while(1){
+        Brain.Screen.setFont(mono40);
+        Brain.Screen.clearLine(1,black);
+        Brain.Screen.setCursor(Brain.Screen.row(),1);
+        Brain.Screen.setCursor(1,1);
+        Brain.Screen.print(Inertial.angle());
+        wait(100,msec);
+    }
+}
 
 void direction_controlling() {
   while(true){

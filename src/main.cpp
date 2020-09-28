@@ -20,6 +20,7 @@
 // Collect_Bottom       motor         7               
 // Collect_Top          motor         8               
 // Vision               vision        9               
+// Inertial             inertial      10              
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"

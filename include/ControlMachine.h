@@ -12,8 +12,11 @@ void usercontrol()
   thread collect_(collect);
   thread Up_down_(Up_down);
   thread Stop_Up_down_(Stop_Up_down);
+  thread c(check);
+
   // thread Find_Ball_(Find_Ball);
   //启动线程
+  c.join();
   direction_controlling_.join();
   collect_.join();
   Up_down_.join();
