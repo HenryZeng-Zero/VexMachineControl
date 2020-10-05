@@ -1,9 +1,14 @@
 #include "vex.h"
 #include "usercontrol.h"
 #include "Find_ball.h"
+#include "autonomous.h"
 #include <thread>
 
 using namespace vex;
+
+void autonomous_In(){
+  autonomous_();
+}
 
 void usercontrol()
 {
