@@ -8,6 +8,7 @@ void check(){
         Brain.Screen.setCursor(Brain.Screen.row(),1);
         Brain.Screen.setCursor(1,1);
         Brain.Screen.print(Inertial.angle());
+        
         wait(100,msec);
     }
 }
@@ -40,6 +41,7 @@ void collect() {
 
 int Stop_Collect_Bottom = 100;
 int Stop_Collect_Top = 100;
+bool switch_ = false;
 
 void init(){
   Collect_Top.spin(forward, -100,velocityUnits::pct);
@@ -56,7 +58,7 @@ void Up_down() {
         } else if (Controller1.ButtonR2.pressing()) {
             Collect_Bottom.spin(reverse, -1 * Stop_Collect_Bottom,velocityUnits::pct);
             Collect_Top.spin(forward, -1 * Stop_Collect_Top,velocityUnits::pct);
-        } else {
+        } else if (switch_ == false){
             Collect_Bottom.stop();
             Collect_Top.stop();
         }
@@ -74,6 +76,17 @@ void Stop_Up_down() {
             Stop_Collect_Bottom = 0;
         } else{
             Stop_Collect_Bottom = 100;
+        }
+    }
+}
+
+void Push() {
+    while (true) {
+        if(Controller1.Axis3.value()!=0){
+            switch_ = true;
+            Collect_Bottom.spin(reverse, Controller1.Axis3.value(),velocityUnits::pct);
+        }else{
+            switch_ = false;
         }
     }
 }
