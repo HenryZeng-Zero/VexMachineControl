@@ -64,38 +64,12 @@ const double Rotating_circle = diagonal * pi;
 
 class Motors{
     public:
-        void waitting(){
-            while (true)
-            {
-                if (Inertial.gyroRate(vex::axisType::zaxis, vex::velocityUnits::dps) <= 0){
-                    break;
-                }
-            }
-        }
-
-        void Deg_init(){
-            Motor_left_Front.resetPosition();
-        }
-
-        void Deg_waitting(double deg){
-            while (true)
-            {
-                
-                if (Motor_left_Front.position(rotationUnits::deg) >= deg){
-                    break;
-                }
-            }
-        }
 
         void Turning_DegMode(double v_left,double v_right,double deg,bool waits = false){
-            Deg_init();
-
             Motor_left_Front.spinFor(directionType::fwd, deg, rotationUnits::deg, v_left, velocityUnits::pct, false);
             Motor_left_back.spinFor(directionType::fwd, deg, rotationUnits::deg, v_left, velocityUnits::pct, false);
             Motor_right_Front.spinFor(directionType::rev, deg, rotationUnits::deg, -v_right, velocityUnits::pct, false);
-            Motor_right_Back.spinFor(directionType::rev, deg, rotationUnits::deg, -v_right, velocityUnits::pct, false);
-
-            Deg_waitting(deg);
+            Motor_right_Back.spinFor(directionType::rev, deg, rotationUnits::deg, -v_right, velocityUnits::pct, true);
         }
 
         void Turning_TurnsMode(double v_left,double v_right,double cycle,bool waits = false){
@@ -103,7 +77,6 @@ class Motors{
             Motor_left_back.spinFor(directionType::fwd, cycle, rotationUnits::rev, v_left, velocityUnits::pct, false);
             Motor_right_Front.spinFor(directionType::rev, cycle, rotationUnits::rev, -v_right, velocityUnits::pct, false);
             Motor_right_Back.spinFor(directionType::rev, cycle, rotationUnits::rev, -v_right, velocityUnits::pct, true);
-            
         }
 
         void Rotating(bool Clockwise,double v,double deg){
@@ -185,6 +158,7 @@ class Motors{
             }
 
             wait(t,msec);
+
             Collect_Bottom.stop();
             Collect_Top.stop();
             
@@ -210,7 +184,7 @@ void autonomous_(){
     
     M.Rotating(false,45,135);
 
-    M.Turning_TurnsMode(100,100,5,true);
+    M.Turning_TurnsMode(100,100,4,true);
 
-    M.Up_down(true,3);
+    M.Up_down(true,2000);
 }
