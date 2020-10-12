@@ -22,6 +22,7 @@ namespace Inertial_flat_Volatility{
         average_num = average_num/10;
         return average_num;
     }
+
 }
 
 namespace deg_Check{
@@ -55,20 +56,6 @@ namespace deg_Check{
     }
 }
 
-void IFV_Init(){
-    while (true)
-    {
-       Inertial_flat_Volatility::get();
-    }
-    
-}
-
-thread IFV_Init_(IFV_Init);
-
-void register_User(){
-    IFV_Init_.join();
-}
-
 const double pi = 3.1415926;
 const double wheel = 10.5;
 const double Length_wheel = pi * wheel;
@@ -80,32 +67,42 @@ class Motors{
         void waitting(){
             while (true)
             {
-                if (Inertial_flat_Volatility::average() <= 0){
+                if (Inertial.gyroRate(vex::axisType::zaxis, vex::velocityUnits::dps) <= 0){
+                    break;
+                }
+            }
+        }
+
+        void Deg_init(){
+            Motor_left_Front.resetPosition();
+        }
+
+        void Deg_waitting(double deg){
+            while (true)
+            {
+                
+                if (Motor_left_Front.position(rotationUnits::deg) >= deg){
                     break;
                 }
             }
         }
 
         void Turning_DegMode(double v_left,double v_right,double deg,bool waits = false){
+            Deg_init();
+
             Motor_left_Front.spinFor(directionType::fwd, deg, rotationUnits::deg, v_left, velocityUnits::pct, false);
             Motor_left_back.spinFor(directionType::fwd, deg, rotationUnits::deg, v_left, velocityUnits::pct, false);
             Motor_right_Front.spinFor(directionType::rev, deg, rotationUnits::deg, -v_right, velocityUnits::pct, false);
             Motor_right_Back.spinFor(directionType::rev, deg, rotationUnits::deg, -v_right, velocityUnits::pct, false);
 
-            if(waits){
-                waitting();
-            }
+            Deg_waitting(deg);
         }
 
         void Turning_TurnsMode(double v_left,double v_right,double cycle,bool waits = false){
             Motor_left_Front.spinFor(directionType::fwd, cycle, rotationUnits::rev, v_left, velocityUnits::pct, false);
             Motor_left_back.spinFor(directionType::fwd, cycle, rotationUnits::rev, v_left, velocityUnits::pct, false);
             Motor_right_Front.spinFor(directionType::rev, cycle, rotationUnits::rev, -v_right, velocityUnits::pct, false);
-            Motor_right_Back.spinFor(directionType::rev, cycle, rotationUnits::rev, -v_right, velocityUnits::pct, false);
-
-            if(waits){
-                waitting();
-            }
+            Motor_right_Back.spinFor(directionType::rev, cycle, rotationUnits::rev, -v_right, velocityUnits::pct, true);
             
         }
 
@@ -202,9 +199,7 @@ class Motors{
 Motors M;
 
 void autonomous_(){
-    register_User();
-
-    // wait(2000,msec);
+    wait(2000,msec);
 
     M.Collect(false,0);
     M.Turning_TurnsMode(100,100,3,true);
