@@ -69,14 +69,25 @@ class Motors{
             Motor_left_Front.spinFor(directionType::fwd, deg, rotationUnits::deg, v_left, velocityUnits::pct, false);
             Motor_left_back.spinFor(directionType::fwd, deg, rotationUnits::deg, v_left, velocityUnits::pct, false);
             Motor_right_Front.spinFor(directionType::rev, deg, rotationUnits::deg, -v_right, velocityUnits::pct, false);
-            Motor_right_Back.spinFor(directionType::rev, deg, rotationUnits::deg, -v_right, velocityUnits::pct, true);
+            Motor_right_Back.spinFor(directionType::rev, deg, rotationUnits::deg, -v_right, velocityUnits::pct, waits);
         }
 
         void Turning_TurnsMode(double v_left,double v_right,double cycle,bool waits = false){
             Motor_left_Front.spinFor(directionType::fwd, cycle, rotationUnits::rev, v_left, velocityUnits::pct, false);
             Motor_left_back.spinFor(directionType::fwd, cycle, rotationUnits::rev, v_left, velocityUnits::pct, false);
             Motor_right_Front.spinFor(directionType::rev, cycle, rotationUnits::rev, -v_right, velocityUnits::pct, false);
-            Motor_right_Back.spinFor(directionType::rev, cycle, rotationUnits::rev, -v_right, velocityUnits::pct, true);
+            Motor_right_Back.spinFor(directionType::rev, cycle, rotationUnits::rev, -v_right, velocityUnits::pct, waits);
+        }
+
+        void StopAll(){
+            Motor_left_Front.stop();
+            Motor_left_back.stop();
+            Motor_right_Front.stop();
+            Motor_right_Back.stop();
+            Collect_Bottom.stop();
+            Collect_Top.stop();
+            Motor_left_Arm.stop();
+            Motor_right_Arm.stop();
         }
 
         void Rotating(bool Clockwise,double v,double deg){
@@ -173,7 +184,7 @@ class Motors{
 Motors M;
 
 void autonomous_(){
-    wait(2000,msec);
+    wait(1500,msec);
 
     M.Collect(false,0);
     M.Turning_TurnsMode(100,100,3,true);
@@ -182,9 +193,14 @@ void autonomous_(){
     // M.Turning_TurnsMode(100,100,-3,true);
     // wait(1000,msec);
     
-    M.Rotating(false,45,135);
+    M.Rotating(false,45,134);
 
-    M.Turning_TurnsMode(100,100,4,true);
+    
+    M.Turning_TurnsMode(100,100,4,false);
 
     M.Up_down(true,2000);
+
+    wait(2000,msec);
+
+    M.StopAll();
 }
