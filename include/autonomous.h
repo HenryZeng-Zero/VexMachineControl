@@ -2,29 +2,6 @@
 #include <thread>
 using namespace vex;
 
-namespace Inertial_flat_Volatility{
-    using namespace vex;
-    double DataList[10];
-    int count = 0;
-    void get(){
-        count++;
-        if(count == 10){
-            count = 0;
-        }
-        DataList[count] =  Inertial.gyroRate(vex::axisType::zaxis, vex::velocityUnits::dps);
-    }
-
-    double average(){
-        double average_num = 0;
-        for(int i = 0;i<10;i++){
-            average_num += DataList[i];
-        }
-        average_num = average_num/10;
-        return average_num;
-    }
-
-}
-
 namespace deg_Check{
     using namespace vex;
     void init(){
@@ -56,15 +33,12 @@ namespace deg_Check{
     }
 }
 
-const double pi = 3.1415926;
-const double wheel = 10.5; // 车轮直径
-const double Length_wheel = pi * wheel; // pi*d 计算车轮的圈长
-
-// const double diagonal = 38 * sqrt(2); // 斜边 
-// const double Rotating_circle = diagonal * pi; // 测试
-
 class Motors{
     public:
+
+        const double pi = 3.1415926;
+        const double wheel = 10.5; // 车轮直径
+        const double Length_wheel = pi * wheel; // pi*d 计算车轮的圈长
 
         void Turning_DegMode(double v_left,double v_right,double deg,bool waits = false){
             Motor_left_Front.spinFor(directionType::fwd, deg, rotationUnits::deg, v_left, velocityUnits::pct, false);
@@ -96,7 +70,6 @@ class Motors{
 
             double v_left = 0;
             double v_right = 0;
-            // double cycle = (Rotating_circle * deg)/360/Length_wheel;
 
             if(Clockwise){
                 v_left = v;
@@ -106,10 +79,6 @@ class Motors{
                 v_right = v;
             }
 
-            // Motor_left_Front.spinFor(directionType::fwd, cycle, rotationUnits::rev, v_left, velocityUnits::pct, false);
-            // Motor_left_back.spinFor(directionType::fwd, cycle, rotationUnits::rev, v_left, velocityUnits::pct, false);
-            // Motor_right_Front.spinFor(directionType::rev, -cycle, rotationUnits::rev, -v_right, velocityUnits::pct, false);
-            // Motor_right_Back.spinFor(directionType::rev, -cycle, rotationUnits::rev, -v_right, velocityUnits::pct, false);
             Motor_left_Front.spin(forward, v_left,velocityUnits::pct);
             Motor_left_back.spin(forward, v_left,velocityUnits::pct);
             Motor_right_Front.spin(reverse, v_right,velocityUnits::pct);
@@ -153,18 +122,21 @@ class Motors{
 
             
         }
+
         void Collect_Stop(){
             Motor_left_Arm.stop();
             Motor_right_Arm.stop();
         }
 
-        void Up_down(bool Up,double t){
+        void Up_down(bool Up,bool Top,bool Bottom,double t){
+            double Bottom_ = 100 * Bottom;
+            double Top_ = 100 * Top;
             if(Up){
-                Collect_Bottom.spin(reverse, 100,velocityUnits::pct);
-                Collect_Top.spin(forward, 100, velocityUnits::pct);
+                Collect_Bottom.spin(reverse, Bottom_,velocityUnits::pct);
+                Collect_Top.spin(forward, Top_, velocityUnits::pct);
             }else{
-                Collect_Bottom.spin(reverse, -100,velocityUnits::pct);
-                Collect_Top.spin(forward, -100,velocityUnits::pct);
+                Collect_Bottom.spin(reverse, -Bottom_,velocityUnits::pct);
+                Collect_Top.spin(forward, -Top_,velocityUnits::pct);
             }
             
             if(t == 0){
@@ -177,9 +149,14 @@ class Motors{
             Collect_Top.stop();
             
         }
+
         void Up_down_Stop(){
             Collect_Bottom.stop();
             Collect_Top.stop();
+        }
+
+        double TurnsConvert_Length(double length){
+            return length / Length_wheel;
         }
 };
 
@@ -189,33 +166,48 @@ Motors M;
 void step1(){
     wait(1500,msec);
 
-    M.Collect(false,0);
-    M.Turning_TurnsMode(60,60,3,true);
-    M.Collect_Stop();
+    M.Turning_TurnsMode(50,50,M.TurnsConvert_Length(90),true); // 走两块地垫距离
+
     // wait(1000,msec);
     // M.Turning_TurnsMode(100,100,-3,true);
     // wait(1000,msec);
     
-    M.Rotating(false,45,134);
+    M.Rotating(false,45,133);
 
     
-    M.Turning_TurnsMode(100,100,4,false);
+    M.Turning_TurnsMode(50,50,M.TurnsConvert_Length(90*sqrt(2)),false); // 走两块地垫距离
+    
+    M.Collect(false,0);
+    
+    wait(1100,msec);
+    
+    // --------
 
-    M.Up_down(true,2000);
+    M.Up_down(true,true,true,600);
 
-    wait(1000,msec);
+    M.Up_down(true,true,false,700);
+
+    M.Collect_Stop();
 
     M.StopAll();
 }
 
 void step2(){
-    M.Turning_TurnsMode(50,50,-1,true);
+    M.Turning_TurnsMode(60,60,-1,true);
 
-    M.Rotating(false,45,134);
+    M.Rotating(false,45,132);
 
-    M.Collect(false,0);
-    M.Turning_TurnsMode(60,60,3,true);
-    M.Collect_Stop();
+    M.Turning_TurnsMode(60,60,M.TurnsConvert_Length(120),true); // 走两块地垫距离
+
+    M.Rotating(true,45,90);
+
+    M.Turning_TurnsMode(60,60,M.TurnsConvert_Length(60 * 0.8),false); // 走0.8地垫距离
+
+    M.Up_down(true,true,true,900);
+    
+    wait(1300,msec);
+
+    M.StopAll();
 }
 
 void autonomous_(){
