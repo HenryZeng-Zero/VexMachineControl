@@ -57,10 +57,11 @@ namespace deg_Check{
 }
 
 const double pi = 3.1415926;
-const double wheel = 10.5;
-const double Length_wheel = pi * wheel;
-const double diagonal = 38 * sqrt(2); //斜边
-const double Rotating_circle = diagonal * pi;
+const double wheel = 10.5; // 车轮直径
+const double Length_wheel = pi * wheel; // pi*d 计算车轮的圈长
+
+// const double diagonal = 38 * sqrt(2); // 斜边 
+// const double Rotating_circle = diagonal * pi; // 测试
 
 class Motors{
     public:
@@ -91,6 +92,8 @@ class Motors{
         }
 
         void Rotating(bool Clockwise,double v,double deg){
+            // Clockwise 顺时针/逆时针
+
             double v_left = 0;
             double v_right = 0;
             // double cycle = (Rotating_circle * deg)/360/Length_wheel;
@@ -183,11 +186,11 @@ class Motors{
 
 Motors M;
 
-void autonomous_(){
+void step1(){
     wait(1500,msec);
 
     M.Collect(false,0);
-    M.Turning_TurnsMode(100,100,3,true);
+    M.Turning_TurnsMode(60,60,3,true);
     M.Collect_Stop();
     // wait(1000,msec);
     // M.Turning_TurnsMode(100,100,-3,true);
@@ -200,7 +203,22 @@ void autonomous_(){
 
     M.Up_down(true,2000);
 
-    wait(2000,msec);
+    wait(1000,msec);
 
     M.StopAll();
+}
+
+void step2(){
+    M.Turning_TurnsMode(50,50,-1,true);
+
+    M.Rotating(false,45,134);
+
+    M.Collect(false,0);
+    M.Turning_TurnsMode(60,60,3,true);
+    M.Collect_Stop();
+}
+
+void autonomous_(){
+    step1();
+    step2();
 }
