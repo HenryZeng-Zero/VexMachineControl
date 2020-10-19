@@ -43,14 +43,7 @@ int Stop_Collect_Bottom = 100;
 int Stop_Collect_Top = 100;
 bool switch_ = false;
 
-void init(){
-  Collect_Top.spin(forward, -100,velocityUnits::pct);
-  wait(1000,vex::timeUnits::msec);
-  Collect_Top.stop();
-}
-
 void Up_down() {
-    init();
     while (true) {
         if (Controller1.ButtonL2.pressing()) {
             Collect_Bottom.spin(reverse, Stop_Collect_Bottom,velocityUnits::pct);

@@ -54,7 +54,7 @@ class Motors{
             Motor_right_Back.spinFor(directionType::rev, cycle, rotationUnits::rev, -v_right, velocityUnits::pct, waits);
         }
 
-        void StopAll(){
+        void StopAll(vex::brakeType mode){
             Motor_left_Front.stop();
             Motor_left_back.stop();
             Motor_right_Front.stop();
@@ -63,6 +63,15 @@ class Motors{
             Collect_Top.stop();
             Motor_left_Arm.stop();
             Motor_right_Arm.stop();
+
+            Motor_left_Front.setStopping(mode);
+            Motor_left_back.setStopping(mode);
+            Motor_right_Front.setStopping(mode);
+            Motor_right_Back.setStopping(mode);
+            Collect_Bottom.setStopping(mode);
+            Collect_Top.setStopping(mode);
+            Motor_left_Arm.setStopping(mode);
+            Motor_right_Arm.setStopping(mode);
         }
 
         void Rotating(bool Clockwise,double v,double deg){
@@ -174,25 +183,22 @@ void step1(){
     
     M.Rotating(false,45,133);
 
+    M.Collect(false,0); // 提前打开收球
+
+    M.Turning_TurnsMode(60,60,M.TurnsConvert_Length(90*sqrt(2)),false); // 走对角线
     
-    M.Turning_TurnsMode(50,50,M.TurnsConvert_Length(90*sqrt(2)),false); // 走两块地垫距离
-    
-    M.Collect(false,0);
-    
-    wait(1100,msec);
-    
+    wait(1400,msec); // 时间阻塞
+
     // --------
 
-    M.Up_down(true,true,true,600);
-
-    M.Up_down(true,true,false,700);
+    M.Up_down(true,true,true,1200);
 
     M.Collect_Stop();
 
-    M.StopAll();
 }
 
 void step2(){
+
     M.Turning_TurnsMode(60,60,-1,true);
 
     M.Rotating(false,45,132);
@@ -203,14 +209,26 @@ void step2(){
 
     M.Turning_TurnsMode(60,60,M.TurnsConvert_Length(60 * 0.8),false); // 走0.8地垫距离
 
-    M.Up_down(true,true,true,900);
+    M.Up_down(true,true,true,0);
     
-    wait(1300,msec);
+    wait(1400,msec);
 
-    M.StopAll();
+    M.Turning_TurnsMode(100,100,-M.TurnsConvert_Length(60 * 2.5),false);
+
+    wait(1400,msec);
+    
+    M.StopAll(vex::brakeType::coast);
+}
+
+
+void init(){
+  Collect_Top.spin(forward, -100,velocityUnits::pct);
+  wait(1000,vex::timeUnits::msec);
+  Collect_Top.stop();
 }
 
 void autonomous_(){
+    init();
     step1();
     step2();
 }
