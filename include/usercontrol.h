@@ -1,18 +1,6 @@
 #include "vex.h"
 using namespace vex;
 
-void check(){
-    while(1){
-        Brain.Screen.setFont(mono40);
-        Brain.Screen.clearLine(1,black);
-        Brain.Screen.setCursor(Brain.Screen.row(),1);
-        Brain.Screen.setCursor(1,1);
-        Brain.Screen.print(Inertial.angle());
-        
-        wait(100,msec);
-    }
-}
-
 void direction_controlling() {
   while(true){
     Motor_left_Front.spin(forward, Controller1.Axis1.value() * 0.5 + Controller1.Axis2.value(),velocityUnits::pct);
@@ -20,7 +8,6 @@ void direction_controlling() {
     Motor_right_Front.spin(reverse, Controller1.Axis2.value() - Controller1.Axis1.value() * 0.5,velocityUnits::pct);
     Motor_right_Back.spin(reverse, Controller1.Axis2.value() - Controller1.Axis1.value() * 0.5,velocityUnits::pct);
   }
-  
 }
 
 
@@ -82,4 +69,21 @@ void Push() {
             switch_ = false;
         }
     }
+}
+
+void usercontrol()
+{
+  // 创建线程
+  thread direction_controlling_(direction_controlling);
+  thread collect_(collect);
+  thread Up_down_(Up_down);
+  thread Stop_Up_down_(Stop_Up_down);
+  thread Push_(Push);
+
+  //启动线程
+  direction_controlling_.join();
+  collect_.join();
+  Up_down_.join();
+  Stop_Up_down_.join();
+  Push_.join();
 }

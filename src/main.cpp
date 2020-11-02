@@ -24,16 +24,18 @@
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
-#include "ControlMachine.h"
+#include "usercontrol.h"
+#include "autonomous.h"
+
 using namespace vex;
 competition Competition;
-
 
 int main() {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
-  Competition.autonomous(autonomous_In);
+  Competition.autonomous(autonomous);
   Competition.drivercontrol(usercontrol);
+  // Competition.drivercontrol(autonomous);
   
   // usercontrol();
 }
