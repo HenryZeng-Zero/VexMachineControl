@@ -1,0 +1,37 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"thread": "cpp",
+			"numeric": "cpp",
+			"*.tcc": "cpp",
+			"string": "cpp",
+			"string_view": "cpp",
+			"new": "cpp",
+			"ostream": "cpp",
+			"sstream": "cpp",
+			"utility": "cpp",
+			"queue": "cpp",
+			"array": "cpp",
+			"deque": "cpp",
+			"vector": "cpp",
+			"optional": "cpp",
+			"functional": "cpp",
+			"random": "cpp",
+			"system_error": "cpp",
+			"memory": "cpp",
+			"istream": "cpp",
+			"tuple": "cpp",
+			"chrono": "cpp",
+			"algorithm": "cpp",
+			"fstream": "cpp",
+			"unordered_map": "cpp",
+			"xiosbase": "cpp",
+			"set": "cpp"
+		}
+	}
+}

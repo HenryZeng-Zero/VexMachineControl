@@ -16,11 +16,12 @@
 // Motor_left_Arm       motor         5               
 // Motor_right_Arm      motor         6               
 // Motor_left_back      motor         3               
-// Motor_right_Back     motor         4               
+// Motor_right_Back     motor         11              
 // Collect_Bottom       motor         7               
 // Collect_Top          motor         8               
-// Vision               vision        9               
+// Vision_bottom        vision        9               
 // Inertial             inertial      10              
+// Vision_top           vision        13              
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
