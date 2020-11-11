@@ -1,6 +1,10 @@
 #include "vex.h"
 using namespace vex;
 
+int Stop_Collect_Bottom = 100;
+int Stop_Collect_Top = 100;
+bool switch_ = false;
+
 void direction_controlling() {
   while(true){
     Motor_left_Front.spin(forward, Controller1.Axis1.value() * 0.5 + Controller1.Axis2.value(),velocityUnits::pct);
@@ -19,16 +23,12 @@ void collect() {
         } else if (Controller1.ButtonR1.pressing()) {
             Motor_left_Arm.spin(forward, -100, velocityUnits::pct);
             Motor_right_Arm.spin(reverse, -100, velocityUnits::pct);
-        } else {
+        } else if(switch_ == false){
             Motor_left_Arm.stop();
             Motor_right_Arm.stop();
         }
     }
 }
-
-int Stop_Collect_Bottom = 100;
-int Stop_Collect_Top = 100;
-bool switch_ = false;
 
 void Up_down() {
     while (true) {
@@ -65,6 +65,9 @@ void Push() {
         if(Controller1.Axis3.value()!=0){
             switch_ = true;
             Collect_Bottom.spin(reverse, Controller1.Axis3.value(),velocityUnits::pct);
+            Collect_Bottom.spin(reverse, Controller1.Axis3.value(),velocityUnits::pct);
+            Motor_left_Arm.spin(forward, Controller1.Axis3.value(), velocityUnits::pct);
+            Motor_right_Arm.spin(reverse, Controller1.Axis3.value(), velocityUnits::pct);
         }else{
             switch_ = false;
         }

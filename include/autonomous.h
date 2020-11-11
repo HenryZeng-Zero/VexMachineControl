@@ -18,11 +18,11 @@ int RightModeID = 2;
 
 
 void autonomous(){
-  int Mode = RightModeID;
+  int Mode = MasterModeID;
   switch (Mode)
   {
     case 0:
-    
+    MasterMode::cycle();
     break;
 
     case 1:
