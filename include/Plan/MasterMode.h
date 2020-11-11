@@ -298,17 +298,17 @@ namespace Tools
     // 左 中 cx 269 270 cy 26 w 50 52 h 50 52
     // 左 大 cx 281 282 cy 26 w 50 52 h 50 52
 
-    // 标准识别 
-    // 5 cm 
+    // 标准识别
+    // 5 cm
     // cx 239 cy 28 w 46 48 h 56
 
-    // 10 cm 
+    // 10 cm
     // cx 239 cy 30 w 42 44 h 59 60
 
-    // 15 cm 
+    // 15 cm
     // cx 234 cy 31 w 40 42 h 58 60
 
-    // 20 cm 
+    // 20 cm
     // cx 228 229 cy 37 w 38 40 h 54
 
     // 25 cm
@@ -317,26 +317,27 @@ namespace Tools
     // 30 cm
     // cx 224 225 cy 42 w 32 34 h 43
 
-    // 35 cm 
+    // 35 cm
     // cx 220 221 cy 44 45 w 32 h 44 46
 
-    // 40 cm 
-    // cx 
-    Advise_flow MasterAdvise(DecisionMaking DM){
-
+    // 40 cm
+    // cx 220 221 cy 47 w 28 30 h 42
+    Advise_flow MasterAdvise(DecisionMaking DM)
+    {
     }
 } // namespace Tools
 
 namespace AiCube
 {
-    void InitAll(){
+    void InitAll()
+    {
         Find_Goals::Init();
     }
-    
-    void AiRun(){
 
+    void AiRun()
+    {
     }
-} // namespace )
+} // namespace AiCube
 
 namespace MasterMode
 {
