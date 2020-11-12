@@ -18,7 +18,7 @@ int RightModeID = 2;
 
 
 void autonomous(){
-  int Mode = MasterModeID;
+  int Mode = RightModeID;
   switch (Mode)
   {
     case 0:

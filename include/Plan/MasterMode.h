@@ -7,46 +7,6 @@
 
 using namespace vex;
 
-class DrawRectangle
-{
-public:
-    std::queue<int> x;
-    std::queue<int> y;
-    std::queue<int> width;
-    std::queue<int> height;
-    std::queue<vex::color> color_;
-
-    void Add(int x_, int y_, int w_, int h_, vex::color c_)
-    {
-        x.push(x_);
-        y.push(y_);
-        width.push(w_);
-        height.push(h_);
-        color_.push(c_);
-    }
-
-    void Draw()
-    {
-        Brain.Screen.clearScreen();
-
-        while (!x.empty())
-        {
-            int x_ = x.front(), y_ = y.front(), w_ = width.front(), h_ = height.front();
-
-            Brain.Screen.setPenColor(color_.front());
-            Brain.Screen.drawRectangle(x_, y_, w_, h_);
-
-            x.pop();
-            y.pop();
-            width.pop();
-            height.pop();
-            color_.pop();
-        }
-    }
-};
-
-DrawRectangle draw;
-
 // 自定数据结构
 
 struct Log_data
@@ -272,11 +232,6 @@ namespace Tools
         int v_right_plus;
     };
 
-    struct DecisionMaking
-    {
-        int size;
-    };
-
     bool isInside(Log_data c, int x, int y, int w, int h)
     {
         if (c.x > x && c.y > y && c.width + c.x < x + w && c.height + c.y < y + h)
@@ -289,41 +244,60 @@ namespace Tools
         }
     }
 
-    // 最小识别 cx 255 cy 25 w 48 50 h 48 50
-    // 右 微 cx 240 241 cy 26 w 48 50 h 52
-    // 右 中 cx 222 223 cy 26 w 48 50 h 52
-    // 右 大 cx 214 215 cy 26 w 48 50 h 52
-
-    // 左 微 cx 263 264 cy 26 w 50 52 h 30 52
-    // 左 中 cx 269 270 cy 26 w 50 52 h 50 52
-    // 左 大 cx 281 282 cy 26 w 50 52 h 50 52
-
-    // 标准识别
-    // 5 cm
-    // cx 239 cy 28 w 46 48 h 56
-
-    // 10 cm
-    // cx 239 cy 30 w 42 44 h 59 60
-
-    // 15 cm
-    // cx 234 cy 31 w 40 42 h 58 60
-
-    // 20 cm
-    // cx 228 229 cy 37 w 38 40 h 54
-
-    // 25 cm
-    // cx 225 226 cy 40 w 34 36 h 52
-
-    // 30 cm
-    // cx 224 225 cy 42 w 32 34 h 43
-
-    // 35 cm
-    // cx 220 221 cy 44 45 w 32 h 44 46
-
-    // 40 cm
-    // cx 220 221 cy 47 w 28 30 h 42
-    Advise_flow MasterAdvise(DecisionMaking DM)
+    double A(double x_)
     {
+        return -0.00008 * x_ * x_ + -0.1397 * x_ + 39.405;
+    }
+
+    int I(double x_)
+    {
+        if (x_ > 0)
+        {
+            return 1;
+        }
+        else if (x_ < 0)
+        {
+            return -1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    double L(double x_)
+    {
+        return 0.0000008 * x_ * x_ - 0.0272 * x_ + 70.919;
+    }
+
+    double F(double x_)
+    {
+        const int a = 1;
+        const int b = 0;
+        return a * x_ + b;
+    }
+
+    double Add(double x_, double size_)
+    {
+        const int a = 1;
+        int Lx = L(size_);
+        int Ax = A(x_);
+        int Fx = F(Lx);
+        return I(-Ax) * a * Fx * Ax * Ax;
+    }
+
+    Advise_flow MasterAdvise(double v_left,double v_right)
+    {
+        Find_Goals::DataConnect();
+        Log_data Data;
+        Advise_flow Advise;
+        Data = Find_Goals::data.Find_Max(Types::Type_area);
+        double Add_ = Add(Data.x,Data.area);
+
+        Advise.v_left_plus = v_left + Add_;
+        Advise.v_right_plus = v_right - Add_;
+
+        return Advise;
     }
 } // namespace Tools
 
@@ -336,6 +310,16 @@ namespace AiCube
 
     void AiRun()
     {
+        Tools::Advise_flow Advise;
+        while (true){
+            Advise = Tools::MasterAdvise(50,50);
+            Brain.Screen.clearScreen();
+            Brain.Screen.setCursor(0,0);
+            Brain.Screen.setFont(vex::mono12);
+            Brain.Screen.print(Advise.v_left_plus);
+
+            wait(100,msec);
+        }
     }
 } // namespace AiCube
 
