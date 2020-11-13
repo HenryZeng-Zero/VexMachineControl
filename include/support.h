@@ -185,4 +185,8 @@ class Motors{
         }
 };
 
+namespace StaticValue{
+    const double Sqrt2 = 1.4142135623731;
+}
+
 #endif;
