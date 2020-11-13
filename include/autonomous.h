@@ -6,30 +6,33 @@
 
 using namespace vex;
 
-void init(){
-  Collect_Top.spin(forward, -100,velocityUnits::pct);
-  wait(1000,vex::timeUnits::msec);
-  Collect_Top.stop();
-}
-
 int MasterModeID = 0;
 int LeftModeID = 1;
 int RightModeID = 2;
 
+void Init()
+{
+  Collect_Top.spin(forward, -100, velocityUnits::pct);
+  wait(1000, vex::timeUnits::msec);
+  Collect_Top.stop();
+}
 
-void autonomous(){
+void autonomous()
+{
+  Init();
+
   int Mode = LeftModeID;
   switch (Mode)
   {
-    case 0:
+  case 0:
     MasterMode::cycle();
     break;
 
-    case 1:
+  case 1:
     LeftMode::autonomous();
     break;
 
-    case 2:
+  case 2:
     RightMode::autonomous();
     break;
   }
