@@ -1,5 +1,7 @@
 #include "vex.h"
 
+#include "Share.h"
+
 #include "./Plan/LeftMode.h"
 #include "./Plan/RightMode.h"
 #include "./Plan/MasterMode.h"
@@ -12,13 +14,14 @@ int RightModeID = 2;
 
 void Init()
 {
+  Share::ON = false;
   Collect_Top.spin(forward, -100, velocityUnits::pct);
   wait(1000, vex::timeUnits::msec);
   Collect_Top.stop();
 }
 
-void autonomous()
-{
+void autonomous(void)
+{ 
   Init();
 
   int Mode = LeftModeID;

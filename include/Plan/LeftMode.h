@@ -30,15 +30,15 @@ namespace LeftMode
 
         // --------
 
-        M.Up_down(true, true, true, 1200);
-
-        M.Collect_Stop();
+        M.Up_down(true, true, true, 1500);
     }
 
     void step2()
     {
 
         M.Turning_TurnsMode(60, 60, -1, true);
+
+        M.Collect_Stop();
 
         M.Rotating(false, 45, 132);
 
@@ -52,7 +52,12 @@ namespace LeftMode
 
         M.Up_down(true, true, true, 0);
 
-        wait(1400, msec);
+        wait(1000, msec);
+
+        Motor_left_Arm.spin(forward, -50, velocityUnits::pct);
+        Motor_right_Arm.spin(reverse, -50, velocityUnits::pct);
+
+        M.Turning_TurnsMode(60, 60,-1, true); // 走0.8地垫距离
     }
 
     void autonomous()

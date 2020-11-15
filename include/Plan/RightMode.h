@@ -31,14 +31,15 @@ namespace RightMode
 
     // --------
 
-    M.Up_down(true, true, true, 1200);
+    M.Up_down(true, true, true, 2000);
 
-    M.Collect_Stop();
+    
   }
 
   void step2()
   {
     M.Turning_TurnsMode(60, 60, -1.2, true);
+    M.Collect_Stop();
 
     M.Rotating(true, 45, 132);
 

@@ -40,4 +40,7 @@ int main() {
   // Competition.drivercontrol(autonomous);
   
   // usercontrol();
+  while (true) {
+    wait(100, msec);
+  }
 }
