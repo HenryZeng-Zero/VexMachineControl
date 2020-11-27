@@ -18,6 +18,16 @@ struct Log_data
     int area;
 };
 
+struct CoverData
+{
+    int x;
+    int y;
+    int width;
+    int height;
+    int Center_x;
+    int Center_y;
+    double CoverPercent;
+};
 namespace Types
 {
     int Type_x = 0;
@@ -111,6 +121,65 @@ public:
     Log_data DataFromId(int id)
     {
         return Data[id];
+    }
+
+    Log_data ToSquireData(Log_data Object)
+    {
+        Log_data Out;
+        Out.x = Object.x - (Object.width / 2);
+        Out.y = Object.y - (Object.height / 2);
+        Out.width = Object.width;
+        Out.height = Object.height;
+        Out.area = Object.area;
+
+        return Out;
+    }
+
+    CoverData Cover(Log_data O, int x, int y, int w, int h)
+    {
+        Log_data Object = ToSquireData(O);
+        CoverData Data;
+        if (Object.x < x)
+            Data.x = x;
+        else
+            Data.x = Object.x;
+
+        if (Object.y < y)
+            Data.y = y;
+        else
+            Data.y = Object.y;
+
+        if (Object.x + Object.width < x + w)
+            Data.width = Object.width;
+        else
+            Data.width = w;
+
+        if (Object.y + Object.height < y + h)
+            Data.height = Object.height;
+        else
+            Data.height = h;
+
+        Data.Center_x = Object.x + (Object.width / 2);
+        Data.Center_y = Object.y + (Object.height / 2);
+
+        Data.CoverPercent = (double(Data.width) * double(Data.height)) / (double(w) * double(h));
+
+        return Data;
+    }
+
+    int FindMaxCoverd(int x, int y, int w, int h)
+    {
+        int Index = 0;
+        double Max = 0;
+        for (int i = 0; i <= Count; i++)
+        {
+            CoverData F = Cover(Data[i],x,y,w,h);
+            if(F.CoverPercent > Max){
+                Max = F.CoverPercent;
+                Index = i;
+            }
+        }
+        return Index;
     }
 };
 
@@ -213,10 +282,12 @@ namespace Find_Balls
         switch (type)
         {
         case 5:
+            Red.Clean();
             Red_Ball.broadcastAndWait();
             break;
 
         case 6:
+            Blue.Clean();
             Blue_Ball.broadcastAndWait();
             break;
         }
@@ -226,78 +297,69 @@ namespace Find_Balls
 
 namespace Tools
 {
-    struct Advise_flow
+    Log_data ToSquireData(Log_data Object)
     {
-        int v_left_plus;
-        int v_right_plus;
-    };
+        Log_data Out;
+        Out.x = Object.x - (Object.width / 2);
+        Out.y = Object.y - (Object.height / 2);
+        Out.width = Object.width;
+        Out.height = Object.height;
+        Out.area = Object.area;
 
-    bool isInside(Log_data c, int x, int y, int w, int h)
+        return Out;
+    }
+
+    CoverData Cover(Log_data O, int x, int y, int w, int h)
     {
-        if (c.x > x && c.y > y && c.width + c.x < x + w && c.height + c.y < y + h)
-        {
-            return true;
-        }
+        Log_data Object = ToSquireData(O);
+        CoverData Data;
+        if (Object.x < x)
+            Data.x = x;
         else
-        {
-            return false;
-        }
-    }
+            Data.x = Object.x;
 
-    double A(double x_)
-    {
-        return -0.00008 * x_ * x_ + -0.1397 * x_ + 39.405;
-    }
-
-    int I(double x_)
-    {
-        if (x_ > 0)
-        {
-            return 1;
-        }
-        else if (x_ < 0)
-        {
-            return -1;
-        }
+        if (Object.y < y)
+            Data.y = y;
         else
-        {
-            return 0;
-        }
+            Data.y = Object.y;
+
+        if (Object.x + Object.width < x + w)
+            Data.width = Object.width;
+        else
+            Data.width = w;
+
+        if (Object.y + Object.height < y + h)
+            Data.height = Object.height;
+        else
+            Data.height = h;
+
+        Data.Center_x = Object.x + (Object.width / 2);
+        Data.Center_y = Object.y + (Object.height / 2);
+
+        Data.CoverPercent = (double(Data.width) * double(Data.height)) / (double(w) * double(h));
+
+        return Data;
     }
 
-    double L(double x_)
+    void GoNear()
     {
-        return 0.0000008 * x_ * x_ - 0.0272 * x_ + 70.919;
-    }
+        int Index;
+        Log_data MaxObject;
+        Index = Find_Balls::Red.FindMaxCoverd(80, 100, 160, 111);
+        MaxObject = Find_Balls::Red.DataFromId(Index);
+        Brain.Screen.setFont(mono40);
+        Brain.Screen.clearLine(1,black);
+        Brain.Screen.setCursor(Brain.Screen.row(),1);
+        Brain.Screen.setCursor(1,1);
+        Brain.Screen.print(MaxObject.x);
 
-    double F(double x_)
-    {
-        const int a = 1;
-        const int b = 0;
-        return a * x_ + b;
-    }
-
-    double Add(double x_, double size_)
-    {
-        const int a = 1;
-        int Lx = L(size_);
-        int Ax = A(x_);
-        int Fx = F(Lx);
-        return I(-Ax) * a * Fx * Ax * Ax;
-    }
-
-    Advise_flow MasterAdvise(double v_left,double v_right)
-    {
-        Find_Goals::DataConnect();
-        Log_data Data;
-        Advise_flow Advise;
-        Data = Find_Goals::data.Find_Max(Types::Type_area);
-        double Add_ = Add(Data.x,Data.area);
-
-        Advise.v_left_plus = v_left + Add_;
-        Advise.v_right_plus = v_right - Add_;
-
-        return Advise;
+        Brain.Screen.setFont(mono40);
+        Brain.Screen.clearLine(2,black);
+        Brain.Screen.setCursor(Brain.Screen.row(),1);
+        Brain.Screen.setCursor(2,1);
+        Brain.Screen.print(MaxObject.y);
+        // CoverData First = Cover(item, 80, 100, 160, 50);
+        // CoverData Second = Cover(item, 80, 150, 160, 61);
     }
 } // namespace Tools
 
@@ -306,19 +368,15 @@ namespace AiCube
     void InitAll()
     {
         Find_Goals::Init();
+        Find_Balls::Init();
     }
 
     void AiRun()
     {
-        Tools::Advise_flow Advise;
-        while (true){
-            Advise = Tools::MasterAdvise(50,50);
-            Brain.Screen.clearScreen();
-            Brain.Screen.setCursor(0,0);
-            Brain.Screen.setFont(vex::mono12);
-            Brain.Screen.print(Advise.v_left_plus);
-
-            wait(100,msec);
+        while (true)
+        {
+            Tools::GoNear();
+            wait(100, msec);
         }
     }
 } // namespace AiCube
@@ -328,10 +386,8 @@ namespace MasterMode
     void cycle()
     {
         AiCube::InitAll();
-        while (true)
-        {
-            AiCube::AiRun();
-        }
+
+        AiCube::AiRun();
     }
 } // namespace MasterMode
 

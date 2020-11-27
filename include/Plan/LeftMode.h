@@ -22,29 +22,42 @@ namespace LeftMode
 
         M.Rotating(false, 45, 133);
 
-        M.Collect(false, 0); // 提前打开收球
-
         M.Turning_TurnsMode(60, 60, M.TurnsConvert_Length(90 * StaticValue::Sqrt2), false); // 走对角线
 
-        wait(1400, msec); // 时间阻塞
+        wait(1000, msec); // 时间阻塞
 
-        // --------
+        M.Collect(false, 0); // 提前打开收球
 
-        M.Up_down(true, true, true, 1500);
+        M.Up_down(true, true, true, 1600);
+
+        M.Collect_Stop();
+
+        wait(1200,msec);
+
+        M.Collect(true, 0);
+
+        M.Up_down_Stop();
+
+        
     }
 
     void step2()
     {
+        
 
-        M.Turning_TurnsMode(60, 60, -1, true);
+        M.Turning_TurnsMode(60, 60, M.TurnsConvert_Length(-35 * StaticValue::Sqrt2), true); 
 
         M.Collect_Stop();
 
-        M.Rotating(false, 45, 132);
+        M.Rotating(false, 45, 135);
 
-        M.Turning_TurnsMode(60, 60, M.TurnsConvert_Length(120), true); // 走两块地垫距离
+        M.Collect_Stop();
 
-        M.Rotating(true, 45, 90);
+
+
+        M.Turning_TurnsMode(60, 60, M.TurnsConvert_Length(115), true); // 走两块地垫距离
+
+        M.Rotating(true, 45, 92);
 
         M.Turning_TurnsMode(60, 60, M.TurnsConvert_Length(60 * 0.8), false); // 走0.8地垫距离
 

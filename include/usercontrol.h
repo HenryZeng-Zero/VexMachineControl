@@ -6,33 +6,44 @@ int Stop_Collect_Bottom = 100;
 int Stop_Collect_Top = 100;
 bool switch_ = false;
 
-void direction_controlling() {
-  while (Share::ON) {
+const float Hindering_factor = 0.4;
+
+void direction_controlling()
+{
+  while (Share::ON)
+  {
     Motor_left_Front.spin(
-        forward, Controller1.Axis1.value() * 0.3 + Controller1.Axis2.value(),
+        forward, Controller1.Axis1.value() * Hindering_factor + Controller1.Axis2.value(),
         velocityUnits::pct);
     Motor_left_back.spin(
-        forward, Controller1.Axis1.value() * 0.3 + Controller1.Axis2.value(),
+        forward, Controller1.Axis1.value() * Hindering_factor + Controller1.Axis2.value(),
         velocityUnits::pct);
     Motor_right_Front.spin(
-        reverse, Controller1.Axis2.value() - Controller1.Axis1.value() * 0.3,
+        reverse, Controller1.Axis2.value() - Controller1.Axis1.value() * Hindering_factor,
         velocityUnits::pct);
     Motor_right_Back.spin(
-        reverse, Controller1.Axis2.value() - Controller1.Axis1.value() * 0.3,
+        reverse, Controller1.Axis2.value() - Controller1.Axis1.value() * Hindering_factor,
         velocityUnits::pct);
     wait(10, msec);
   }
 }
 
-void collect() {
-  while (Share::ON) {
-    if (Controller1.ButtonL1.pressing()) {
+void collect()
+{
+  while (Share::ON)
+  {
+    if (Controller1.ButtonL1.pressing())
+    {
       Motor_left_Arm.spin(forward, 100, velocityUnits::pct);
       Motor_right_Arm.spin(reverse, 100, velocityUnits::pct);
-    } else if (Controller1.ButtonR1.pressing()) {
+    }
+    else if (Controller1.ButtonR1.pressing())
+    {
       Motor_left_Arm.spin(forward, -100, velocityUnits::pct);
       Motor_right_Arm.spin(reverse, -100, velocityUnits::pct);
-    } else if (switch_ == false) {
+    }
+    else if (switch_ == false)
+    {
       Motor_left_Arm.stop();
       Motor_right_Arm.stop();
     }
@@ -40,18 +51,25 @@ void collect() {
   }
 }
 
-void Up_down() {
-  while (Share::ON) {
-    if (Controller1.ButtonL2.pressing()) {
+void Up_down()
+{
+  while (Share::ON)
+  {
+    if (Controller1.ButtonL2.pressing())
+    {
       Collect_Bottom.spin(reverse, Stop_Collect_Bottom * 0.8,
                           velocityUnits::pct);
       Collect_Top.spin(forward, Stop_Collect_Top * 0.8, velocityUnits::pct);
-    } else if (Controller1.ButtonR2.pressing()) {
+    }
+    else if (Controller1.ButtonR2.pressing())
+    {
       Collect_Bottom.spin(reverse, -1 * Stop_Collect_Bottom * 0.8,
                           velocityUnits::pct);
       Collect_Top.spin(forward, -1 * Stop_Collect_Top * 0.8,
                        velocityUnits::pct);
-    } else if (switch_ == false) {
+    }
+    else if (switch_ == false)
+    {
       Collect_Bottom.stop();
       Collect_Top.stop();
     }
@@ -59,25 +77,36 @@ void Up_down() {
   }
 }
 
-void Stop_Up_down() {
-  while (Share::ON) {
-    if (Controller1.ButtonUp.pressing()) {
+void Stop_Up_down()
+{
+  while (Share::ON)
+  {
+    if (Controller1.ButtonUp.pressing())
+    {
       Stop_Collect_Top = 0;
-    } else {
+    }
+    else
+    {
       Stop_Collect_Top = 100;
     }
-    if (Controller1.ButtonDown.pressing()) {
+    if (Controller1.ButtonDown.pressing())
+    {
       Stop_Collect_Bottom = 0;
-    } else {
+    }
+    else
+    {
       Stop_Collect_Bottom = 100;
     }
     wait(10, msec);
   }
 }
 
-void Push() {
-  while (Share::ON) {
-    if (Controller1.Axis3.value() != 0) {
+void Push()
+{
+  while (Share::ON)
+  {
+    if (Controller1.Axis3.value() != 0)
+    {
       switch_ = true;
       Collect_Bottom.spin(reverse, Controller1.Axis3.value(),
                           velocityUnits::pct);
@@ -87,14 +116,17 @@ void Push() {
                           velocityUnits::pct);
       Motor_right_Arm.spin(reverse, Controller1.Axis3.value(),
                            velocityUnits::pct);
-    } else {
+    }
+    else
+    {
       switch_ = false;
     }
     wait(10, msec);
   }
 }
 
-void usercontrol(void) {
+void usercontrol(void)
+{
   Share::ON = true;
   // 创建线程
   thread direction_controlling_(direction_controlling);
