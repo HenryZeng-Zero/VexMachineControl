@@ -28,32 +28,33 @@ namespace LeftMode
 
         M.Collect(false, 0); // 提前打开收球
 
-        M.Up_down(true, true, true, 1600);
+        M.Up_down(true, true, true, 0);
+
+        wait(1600, msec);
 
         M.Collect_Stop();
 
-        wait(1200,msec);
+        wait(200, msec);
+
+        M.Up_down_Stop();
+
+        wait(1200, msec);
 
         M.Collect(true, 0);
 
         M.Up_down_Stop();
-
-        
     }
 
     void step2()
     {
-        
 
-        M.Turning_TurnsMode(60, 60, M.TurnsConvert_Length(-35 * StaticValue::Sqrt2), true); 
+        M.Turning_TurnsMode(60, 60, M.TurnsConvert_Length(-35 * StaticValue::Sqrt2), true);
 
         M.Collect_Stop();
 
         M.Rotating(false, 45, 135);
 
         M.Collect_Stop();
-
-
 
         M.Turning_TurnsMode(60, 60, M.TurnsConvert_Length(115), true); // 走两块地垫距离
 
@@ -70,7 +71,7 @@ namespace LeftMode
         Motor_left_Arm.spin(forward, -50, velocityUnits::pct);
         Motor_right_Arm.spin(reverse, -50, velocityUnits::pct);
 
-        M.Turning_TurnsMode(60, 60,-1, true); // 走0.8地垫距离
+        M.Turning_TurnsMode(60, 60, -1, true); // 走0.8地垫距离
     }
 
     void autonomous()

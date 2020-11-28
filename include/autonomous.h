@@ -5,12 +5,17 @@
 #include "./Plan/LeftMode.h"
 #include "./Plan/RightMode.h"
 #include "./Plan/MasterMode.h"
+#include "./Plan/LeftOnlyMode.h"
+#include "./Plan/RightOnlyMode.h"
 
 using namespace vex;
 
-int MasterModeID = 0;
-int LeftModeID = 1;
-int RightModeID = 2;
+const int MasterModeID = 0;
+const int LeftModeID = 1;
+const int RightModeID = 2;
+
+const int LeftOnlyModeID = 3;
+const int RightOnlyModeID = 4;
 
 void Init()
 {
@@ -24,7 +29,7 @@ void autonomous(void)
 { 
   Init();
 
-  int Mode = LeftModeID;
+  int Mode = RightOnlyModeID;
   switch (Mode)
   {
   case 0:
@@ -37,6 +42,14 @@ void autonomous(void)
 
   case 2:
     RightMode::autonomous();
+    break;
+
+    case 3:
+    LeftOnlyMode::autonomous();
+    break;
+
+    case 4:
+    RightOnlyMode::autonomous();
     break;
   }
 }
